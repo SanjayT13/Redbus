@@ -1,0 +1,36 @@
+make_dataset : 
+  test_size : 0.1
+  random_state : 234
+
+build_features : 
+  lead_days : [30,20,15]
+  avg_func_list : [[30,25],[25,20],[20,14]]
+  ewma_alpha_list : [0.1,0.5,0.9] 
+  target_enc_destid_path : 'E:\DS\mlops_dvc_ds_project\redbus\data\interim\destid_encode.csv' 
+  target_enc_dest_reg_path : 'E:\DS\mlops_dvc_ds_project\redbus\data\interim\destid_region_encode.csv' 
+  target_enc_srcid_path : 'E:\DS\mlops_dvc_ds_project\redbus\data\interim\srcid_encode.csv'
+  target_end_src_reg_path : 'E:\DS\mlops_dvc_ds_project\redbus\data\interim\srcid_region_encode.csv'
+  
+model_train : 
+  active_model : "xgb_regressor"  # Which model to use
+  xgb_regressor : 
+    objective : 'reg:squarederror'
+    n_estimators : 600
+    learning_rate : 0.1 
+    max_depth : 6
+    subsample : 0.6
+    colsample_bytree : 0.6
+    random_state : 42
+  
+  LGBMRegressor : 
+    n_estimators : 800
+    learning_rate : 0.03
+    max_depth : 6
+    feature_fraction : 0.6 
+    bagging_fraction : 0.6
+    min_child_samples : 50
+    lambda_l1 : 1
+    lambda_l2 : 1
+    random_state : 42
+
+  
