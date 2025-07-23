@@ -80,13 +80,14 @@ target/
 /redbus/data/processed/
 /redbus/data/interim/
 /redbus/data/external/
+/redbus/models/
 /redbus/data/*/
 !/redbus/data/*.dvc
 
 
 
 # redbus/data/
-# redbus/models/
+
 # !redbus/data/*.dvc
 # !redbus/data/*/*.dvc
 # !redbus/data/raw/
