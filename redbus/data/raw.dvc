@@ -3,4 +3,4 @@ outs:
   size: 187560150
   nfiles: 4
   hash: md5
-  path: redbus/data/raw
+  path: raw
