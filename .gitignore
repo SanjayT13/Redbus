@@ -79,6 +79,7 @@ target/
 redbus/data/
 redbus/models/
 !redbus/data/*.dvc
+!redbus/data/*/*.dvc
 !redbus/data/raw/
 !redbus/data/raw/*.dvc 
 !redbus/data/processed 
