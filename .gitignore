@@ -78,7 +78,12 @@ target/
 # exclude data from source control by default
 redbus/data/
 redbus/models/
-
+!redbus/data/raw/
+!redbus/data/raw/*.dvc 
+!redbus/data/processed 
+!redbus/data/processed/*.dvc
+!redbus/data/interim
+!redbus/data/interim/*.dvc
 # Mac OS-specific storage files
 .DS_Store
 
