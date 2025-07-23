@@ -76,16 +76,25 @@ target/
 .ipynb_checkpoints/
 
 # exclude data from source control by default
-redbus/data/
-redbus/models/
-!redbus/data/*.dvc
-!redbus/data/*/*.dvc
-!redbus/data/raw/
-!redbus/data/raw/*.dvc 
-!redbus/data/processed 
-!redbus/data/processed/*.dvc
-!redbus/data/interim
-!redbus/data/interim/*.dvc
+/redbus/data/raw/
+/redbus/data/processed/
+/redbus/data/interim/
+/redbus/data/external/
+/redbus/data/*/
+!/redbus/data/*.dvc
+
+
+
+# redbus/data/
+# redbus/models/
+# !redbus/data/*.dvc
+# !redbus/data/*/*.dvc
+# !redbus/data/raw/
+# !redbus/data/raw/*.dvc 
+# !redbus/data/processed 
+# !redbus/data/processed/*.dvc
+# !redbus/data/interim
+# !redbus/data/interim/*.dvc
 # Mac OS-specific storage files
 .DS_Store
 
