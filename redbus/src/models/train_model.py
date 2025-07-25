@@ -1,3 +1,4 @@
+import os
 import sys 
 from pathlib import Path 
 import datetime as dt
@@ -77,8 +78,11 @@ def train_model(X,y,model_name,hyperparam_dict) :
 def model_save(model_obj,model_path) : 
     # path = "E:\DS\Analytics_vidhya\June 2025\my_saves\model_lightgbm_5.pkl" 
     try : 
+        model_dir = Path(model_path).parent
+        model_dir.mkdir(parents=True, exist_ok=True)
+
         pickle.dump(model_obj,open(model_path, "wb")) 
-        model_train_logger.save_logs(msg=f'Model savedd',log_level='info')
+        model_train_logger.save_logs(msg=f'Model saved',log_level='info')
 
     except Exception as e : 
         model_train_logger.save_logs(msg=f'Exception : {e}',log_level='error') 
@@ -109,6 +113,8 @@ def main() :
     model_trained = train_model(X,y,model_name,hyperparam_dict)
     # Save model   
     model_save_data_path = sys.argv[2]
+    print(f"Model save path: {model_save_data_path}")
+    print(f"Absolute path: {os.path.abspath(model_save_data_path)}")
     model_save(model_trained,model_save_data_path)
     print('Model Saved')
 

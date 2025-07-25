@@ -84,14 +84,17 @@ def main() :
     pred_data_path = sys.argv[1]
     df_pred_Data,y_test = create_df(pred_data_path) # get X to be predicted 
     # read model 
-    model_file_name = pred_data_path = sys.argv[2]
+    model_file_name = sys.argv[2]
     # predict result 
     df_pred = get_preds(df_pred_Data,model_file_name) 
+    file_path_output = sys.argv[3] 
+    df_pred.to_csv(file_path_output, index=False)
+    model_pred_logger.save_logs(msg = f'File written to path {file_path_output}',log_level='info')
     # evaluate 
     if y_test is not None : 
         func_eval(df_pred,y_test) 
-        print('Prediction done') 
-
+        print('Evaluation done') 
+        model_pred_logger.save_logs(msg = f'Evaluation done for predictions : {file_path_output}',log_level='info')
 
 if __name__ == '__main__' : 
     main()

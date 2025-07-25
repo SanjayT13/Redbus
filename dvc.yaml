@@ -1,0 +1,64 @@
+stages:
+  make_dataset:
+    cmd: python redbus/src/data/make_dataset.py train.csv
+    deps:
+      - redbus/src/data/make_dataset.py
+      - redbus/data/raw/train.csv
+    params : 
+      - E:/DS/mlops_dvc_ds_project/redbus/params.yaml : 
+        - make_dataset.test_size 
+        - make_dataset.random_state
+    outs : 
+      - redbus/data/interim/
+
+  build_features:
+    cmd: python redbus/src/features/build_features.py redbus/data/interim/train.csv redbus/data/raw/transactions.csv redbus/data/processed/train_data_processed_25072025.csv 
+    deps:
+      - redbus/src/features/build_features.py 
+      - redbus/data/interim/train.csv 
+      - redbus/data/raw/transactions.csv 
+    params:
+      - E:/DS/mlops_dvc_ds_project/redbus/params.yaml :
+        - build_features.lead_days
+        - build_features.avg_func_list
+        - build_features.target_enc_destid_path
+        - build_features.target_enc_dest_reg_path
+        - build_features.target_enc_srcid_path
+        - build_features.target_end_src_reg_path
+    outs:
+      - redbus/data/processed/train_data_processed_25072025.csv 
+  
+  train_model: 
+    cmd: python redbus/src/models/train_model.py redbus/data/processed/train_data_processed_25072025.csv redbus/data/models/xgb_regressor_25072025.pkl
+    deps: 
+      - redbus/src/models/train_model.py
+      - redbus/data/processed/train_data_processed_25072025.csv
+    params:
+      - E:/DS/mlops_dvc_ds_project/redbus/params.yaml :
+          - model_train.active_model
+          - model_train.xgb_regressor.objective
+          - model_train.xgb_regressor.n_estimators
+          - model_train.xgb_regressor.learning_rate
+          - model_train.xgb_regressor.max_depth
+          - model_train.xgb_regressor.subsample
+          - model_train.xgb_regressor.colsample_bytree
+          - model_train.xgb_regressor.random_state
+          - model_train.LGBMRegressor.n_estimators
+          - model_train.LGBMRegressor.learning_rate
+          - model_train.LGBMRegressor.max_depth
+          - model_train.LGBMRegressor.feature_fraction
+          - model_train.LGBMRegressor.bagging_fraction
+          - model_train.LGBMRegressor.min_child_samples
+          - model_train.LGBMRegressor.lambda_l1
+          - model_train.LGBMRegressor.lambda_l2
+          - model_train.LGBMRegressor.random_state
+    outs: 
+      - redbus/data/models/xgb_regressor_25072025.pkl
+
+  predict_model:
+    cmd: python redbus\src\models\predict_model.py redbus/data/processed/train_data_processed_25072025.csv redbus/data/models/xgb_regressor_25072025.pkl redbus/data/processed/Model_Output_25072025.csv
+    deps: 
+      - redbus/data/processed/train_data_processed_25072025.csv 
+      - redbus/data/models/xgb_regressor_25072025.pkl
+    outs: 
+      - redbus/data/processed/Model_Output_25072025.csv

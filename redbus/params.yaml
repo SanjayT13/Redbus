@@ -6,10 +6,10 @@ build_features :
   lead_days : [30,20,15]
   avg_func_list : [[30,25],[25,20],[20,14]]
   ewma_alpha_list : [0.1,0.5,0.9] 
-  target_enc_destid_path : 'E:\DS\mlops_dvc_ds_project\redbus\data\interim\destid_encode.csv' 
-  target_enc_dest_reg_path : 'E:\DS\mlops_dvc_ds_project\redbus\data\interim\destid_region_encode.csv' 
-  target_enc_srcid_path : 'E:\DS\mlops_dvc_ds_project\redbus\data\interim\srcid_encode.csv'
-  target_end_src_reg_path : 'E:\DS\mlops_dvc_ds_project\redbus\data\interim\srcid_region_encode.csv'
+  target_enc_destid_path : 'E:\DS\mlops_dvc_ds_project\redbus\data\encodding_files\destid_encode.csv' 
+  target_enc_dest_reg_path : 'E:\DS\mlops_dvc_ds_project\redbus\data\encodding_files\destid_region_encode.csv' 
+  target_enc_srcid_path : 'E:\DS\mlops_dvc_ds_project\redbus\data\encodding_files\srcid_encode.csv'
+  target_end_src_reg_path : 'E:\DS\mlops_dvc_ds_project\redbus\data\encodding_files\srcid_region_encode.csv'
   
 model_train : 
   active_model : "xgb_regressor"  # Which model to use
