@@ -73,10 +73,13 @@ def func_eval(df_pred,y_test) :
     print("rmse : ",rmse)
     print("mean_absolute_error : ",mean_absolute_error_ )
     print(" r2_score : ",r2_score_) 
+    metrics_df = pd.DataFrame({"Column" : ['Mean_squared_error','rmse','mean_absolute_error','r2_score'],
+                  "Value" : [Mean_squared_error,rmse,mean_absolute_error_,r2_score_]})
     model_pred_logger.save_logs(msg=f'Mean squared error : {Mean_squared_error}',log_level='info')
     model_pred_logger.save_logs(msg=f'rmse : {rmse}',log_level='info')
     model_pred_logger.save_logs(msg=f'mean_absolute_error : {mean_absolute_error_}',log_level='info')
     model_pred_logger.save_logs(msg=f'r2_score : {r2_score_}',log_level='info')
+    return metrics_df
     
 
 def main() : 
@@ -92,9 +95,16 @@ def main() :
     model_pred_logger.save_logs(msg = f'File written to path {file_path_output}',log_level='info')
     # evaluate 
     if y_test is not None : 
-        func_eval(df_pred,y_test) 
+        if sys.argv[4] == 'train' :  
+            run_date = str(dt.date.today())
+            file_path_output_eval = f'redbus/data/processed/train_{run_date}.csv' 
+        elif sys.argv[4] == 'val' : 
+            run_date = str(dt.date.today())
+            file_path_output_eval = f'redbus/data/processed/val_{run_date}.csv'
+        metrics_df = func_eval(df_pred,y_test) 
+        metrics_df.to_csv(file_path_output_eval, index=False)
+        model_pred_logger.save_logs(msg = f'Evaluation File written to path {file_path_output_eval}',log_level='info')
         print('Evaluation done') 
-        model_pred_logger.save_logs(msg = f'Evaluation done for predictions : {file_path_output}',log_level='info')
 
 if __name__ == '__main__' : 
     main()

@@ -45,34 +45,36 @@ def create_X_y(df) :
     return X,y 
 
 def train_model(X,y,model_name,hyperparam_dict) : 
-    if model_name == 'xgb_regressor' : 
-        model = XGBRegressor(objective = hyperparam_dict['objective'],  # Required for regression
-                     n_estimators = hyperparam_dict['n_estimators'],
-                     learning_rate = hyperparam_dict['learning_rate'],
-                     max_depth = hyperparam_dict['max_depth'],
-                     subsample = hyperparam_dict['subsample'],
-                     colsample_bytree = hyperparam_dict['colsample_bytree'],
-                     random_state = hyperparam_dict['random_state'])
+    # if model_name == 'xgb_regressor' : 
+    #     model = XGBRegressor(objective = hyperparam_dict['objective'],  # Required for regression
+    #                  n_estimators = hyperparam_dict['n_estimators'],
+    #                  learning_rate = hyperparam_dict['learning_rate'],
+    #                  max_depth = hyperparam_dict['max_depth'],
+    #                  subsample = hyperparam_dict['subsample'],
+    #                  colsample_bytree = hyperparam_dict['colsample_bytree'],
+    #                  random_state = hyperparam_dict['random_state'])
+    try :    
+        model = XGBRegressor(**hyperparam_dict)
         model = model.fit(X,y)
         model_train_logger.save_logs(msg=f'Model {model_name} is trained',log_level='info')
         return model
 
-    elif model_name == 'LGBMRegressor' : 
-        model = LGBMRegressor(n_estimators= hyperparam_dict['n_estimators'],
-                              learning_rate = hyperparam_dict['learning_rate'],
-                              max_depth=hyperparam_dict['max_depth'],
-                              feature_fraction = hyperparam_dict['feature_fraction'], 
-                              bagging_fraction = hyperparam_dict['bagging_fraction'],
-                              min_child_samples = hyperparam_dict['min_child_samples'],
-                              lambda_l1 = hyperparam_dict['lambda_l1'],
-                              lambda_l2 = hyperparam_dict['lambda_l2'],
-                              random_state=hyperparam_dict['random_state'])
-        model = model.fit(X,y)
-        model_train_logger.save_logs(msg=f'Model {model_name} is trained',log_level='info')
-        return model
-    else : 
-        print('Model not found')
-        model_train_logger.save_logs(msg=f'Model not found',log_level='error')
+    # elif model_name == 'LGBMRegressor' : 
+    #     model = LGBMRegressor(n_estimators= hyperparam_dict['n_estimators'],
+    #                           learning_rate = hyperparam_dict['learning_rate'],
+    #                           max_depth=hyperparam_dict['max_depth'],
+    #                           feature_fraction = hyperparam_dict['feature_fraction'], 
+    #                           bagging_fraction = hyperparam_dict['bagging_fraction'],
+    #                           min_child_samples = hyperparam_dict['min_child_samples'],
+    #                           lambda_l1 = hyperparam_dict['lambda_l1'],
+    #                           lambda_l2 = hyperparam_dict['lambda_l2'],
+    #                           random_state=hyperparam_dict['random_state'])
+    #     model = model.fit(X,y)
+    #     model_train_logger.save_logs(msg=f'Model {model_name} is trained',log_level='info')
+    #     return model
+    except Exception as e : 
+        print('error in train_model')
+        model_train_logger.save_logs(msg=f'Error in train model : {e}',log_level='error')
         raise
 
 def model_save(model_obj,model_path) : 

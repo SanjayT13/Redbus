@@ -12,7 +12,7 @@ build_features :
   target_end_src_reg_path : 'E:\DS\mlops_dvc_ds_project\redbus\data\encodding_files\srcid_region_encode.csv'
   
 model_train : 
-  active_model : "xgb_regressor"  # Which model to use
+  active_model : "LGBMRegressor"  # Which model to use
   xgb_regressor : 
     objective : 'reg:squarederror'
     n_estimators : 600

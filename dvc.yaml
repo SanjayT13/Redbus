@@ -9,10 +9,11 @@ stages:
         - make_dataset.test_size 
         - make_dataset.random_state
     outs : 
-      - redbus/data/interim/
+      - redbus/data/interim/train.csv 
+      - redbus/data/interim/val.csv
 
   build_features:
-    cmd: python redbus/src/features/build_features.py redbus/data/interim/train.csv redbus/data/raw/transactions.csv redbus/data/processed/train_data_processed_25072025.csv 
+    cmd: python redbus/src/features/build_features.py redbus/data/interim/train.csv redbus/data/raw/transactions.csv redbus/data/processed/train_data_processed.csv 
     deps:
       - redbus/src/features/build_features.py 
       - redbus/data/interim/train.csv 
@@ -26,13 +27,13 @@ stages:
         - build_features.target_enc_srcid_path
         - build_features.target_end_src_reg_path
     outs:
-      - redbus/data/processed/train_data_processed_25072025.csv 
+      - redbus/data/processed/train_data_processed.csv 
   
   train_model: 
-    cmd: python redbus/src/models/train_model.py redbus/data/processed/train_data_processed_25072025.csv redbus/data/models/xgb_regressor_25072025.pkl
+    cmd: python redbus/src/models/train_model.py redbus/data/processed/train_data_processed.csv redbus/data/models/model.pkl
     deps: 
       - redbus/src/models/train_model.py
-      - redbus/data/processed/train_data_processed_25072025.csv
+      - redbus/data/processed/train_data_processed.csv
     params:
       - E:/DS/mlops_dvc_ds_project/redbus/params.yaml :
           - model_train.active_model
@@ -53,12 +54,37 @@ stages:
           - model_train.LGBMRegressor.lambda_l2
           - model_train.LGBMRegressor.random_state
     outs: 
-      - redbus/data/models/xgb_regressor_25072025.pkl
+      - redbus/data/models/model.pkl
 
   predict_model:
-    cmd: python redbus\src\models\predict_model.py redbus/data/processed/train_data_processed_25072025.csv redbus/data/models/xgb_regressor_25072025.pkl redbus/data/processed/Model_Output_25072025.csv
+    cmd: python redbus/src/models/predict_model.py redbus/data/processed/train_data_processed.csv redbus/data/models/model.pkl redbus/data/processed/Model_Output_train.csv train
     deps: 
-      - redbus/data/processed/train_data_processed_25072025.csv 
-      - redbus/data/models/xgb_regressor_25072025.pkl
+      - redbus/data/processed/train_data_processed.csv 
+      - redbus/data/models/model.pkl
     outs: 
-      - redbus/data/processed/Model_Output_25072025.csv
+      - redbus/data/processed/Model_Output_train.csv
+
+  build_features_val:
+    cmd: python redbus/src/features/build_features.py redbus/data/interim/val.csv redbus/data/raw/transactions.csv redbus/data/processed/val_data_processed.csv 
+    deps:
+      - redbus/src/features/build_features.py 
+      - redbus/data/interim/val.csv 
+      - redbus/data/raw/transactions.csv 
+    params:
+      - E:/DS/mlops_dvc_ds_project/redbus/params.yaml :
+        - build_features.lead_days
+        - build_features.avg_func_list
+        - build_features.target_enc_destid_path
+        - build_features.target_enc_dest_reg_path
+        - build_features.target_enc_srcid_path
+        - build_features.target_end_src_reg_path
+    outs:
+      - redbus/data/processed/val_data_processed.csv
+  
+  predict_model_val:
+    cmd: python redbus/src/models/predict_model.py redbus/data/processed/val_data_processed.csv redbus/data/models/model.pkl redbus/data/processed/Model_Output_Val.csv val 
+    deps: 
+      - redbus/data/processed/val_data_processed.csv 
+      - redbus/data/models/model.pkl
+    outs: 
+      - redbus/data/processed/Model_Output_Val.csv
