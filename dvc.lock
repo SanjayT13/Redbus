@@ -16,14 +16,17 @@ stages:
         make_dataset.random_state: 234
         make_dataset.test_size: 0.1
     outs:
-    - path: redbus/data/interim/
+    - path: redbus/data/interim/train.csv
       hash: md5
-      md5: b2044014024b271f3e2f3b75d815adc9.dir
-      size: 1645476
-      nfiles: 2
+      md5: 93ef4e1cbb7c914f26df9dec506c4d51
+      size: 1480937
+    - path: redbus/data/interim/val.csv
+      hash: md5
+      md5: 2cbe2437eee6177ceb52c89713a218f1
+      size: 164539
   build_features:
     cmd: python redbus/src/features/build_features.py redbus/data/interim/train.csv
-      redbus/data/raw/transactions.csv redbus/data/processed/train_data_processed_25072025.csv
+      redbus/data/raw/transactions.csv redbus/data/processed/train_data_processed.csv
     deps:
     - path: redbus/data/interim/train.csv
       hash: md5
@@ -55,34 +58,34 @@ stages:
         build_features.target_enc_srcid_path: E:\DS\mlops_dvc_ds_project\redbus\data\encodding_files\srcid_encode.csv
         build_features.target_end_src_reg_path: E:\DS\mlops_dvc_ds_project\redbus\data\encodding_files\srcid_region_encode.csv
     outs:
-    - path: redbus/data/processed/train_data_processed_25072025.csv
+    - path: redbus/data/processed/train_data_processed.csv
       hash: md5
       md5: 49a831e27fb450fc42071df0c71e0020
       size: 24080936
   train_model:
-    cmd: python redbus/src/models/train_model.py redbus/data/processed/train_data_processed_25072025.csv
-      redbus/data/models/xgb_regressor_25072025.pkl
+    cmd: python redbus/src/models/train_model.py redbus/data/processed/train_data_processed.csv
+      redbus/data/models/model.pkl
     deps:
-    - path: redbus/data/processed/train_data_processed_25072025.csv
+    - path: redbus/data/processed/train_data_processed.csv
       hash: md5
       md5: 49a831e27fb450fc42071df0c71e0020
       size: 24080936
     - path: redbus/src/models/train_model.py
       hash: md5
-      md5: cf3bdde286d70c10148b53219d23470a
-      size: 5021
+      md5: c3f7e92646b969608793be33c7365812
+      size: 5160
     params:
       redbus/params.yaml:
         model_train.LGBMRegressor.bagging_fraction: 0.6
         model_train.LGBMRegressor.feature_fraction: 0.6
         model_train.LGBMRegressor.lambda_l1: 1
         model_train.LGBMRegressor.lambda_l2: 1
-        model_train.LGBMRegressor.learning_rate: 0.03
+        model_train.LGBMRegressor.learning_rate: 0.015
         model_train.LGBMRegressor.max_depth: 6
         model_train.LGBMRegressor.min_child_samples: 50
-        model_train.LGBMRegressor.n_estimators: 800
+        model_train.LGBMRegressor.n_estimators: 600
         model_train.LGBMRegressor.random_state: 42
-        model_train.active_model: xgb_regressor
+        model_train.active_model: LGBMRegressor
         model_train.xgb_regressor.colsample_bytree: 0.6
         model_train.xgb_regressor.learning_rate: 0.1
         model_train.xgb_regressor.max_depth: 6
@@ -91,24 +94,79 @@ stages:
         model_train.xgb_regressor.random_state: 42
         model_train.xgb_regressor.subsample: 0.6
     outs:
-    - path: redbus/data/models/xgb_regressor_25072025.pkl
+    - path: redbus/data/models/model.pkl
       hash: md5
-      md5: 4af461fb973b9a8adb831281cf16194a
-      size: 2749430
+      md5: 99866f509311c9aa72e8fdb65691e243
+      size: 2877812
   predict_model:
-    cmd: python redbus\src\models\predict_model.py redbus/data/processed/train_data_processed_25072025.csv
-      redbus/data/models/xgb_regressor_25072025.pkl redbus/data/processed/Model_Output_25072025.csv
+    cmd: python redbus/src/models/predict_model.py redbus/data/processed/train_data_processed.csv
+      redbus/data/models/model.pkl redbus/data/processed/Model_Output_train.csv train
     deps:
-    - path: redbus/data/models/xgb_regressor_25072025.pkl
+    - path: redbus/data/models/model.pkl
       hash: md5
-      md5: 4af461fb973b9a8adb831281cf16194a
-      size: 2749430
-    - path: redbus/data/processed/train_data_processed_25072025.csv
+      md5: 99866f509311c9aa72e8fdb65691e243
+      size: 2877812
+    - path: redbus/data/processed/train_data_processed.csv
       hash: md5
       md5: 49a831e27fb450fc42071df0c71e0020
       size: 24080936
     outs:
-    - path: redbus/data/processed/Model_Output_25072025.csv
+    - path: redbus/data/processed/Model_Output_train.csv
       hash: md5
-      md5: 4bf58051a9a08a75f1b8b70b3d9fe3a5
-      size: 651438
+      md5: ba62ed1b42d6508497163e271775550b
+      size: 652490
+  build_features_val:
+    cmd: python redbus/src/features/build_features.py redbus/data/interim/val.csv
+      redbus/data/raw/transactions.csv redbus/data/processed/val_data_processed.csv
+    deps:
+    - path: redbus/data/interim/val.csv
+      hash: md5
+      md5: 2cbe2437eee6177ceb52c89713a218f1
+      size: 164539
+    - path: redbus/data/raw/transactions.csv
+      hash: md5
+      md5: 2d878cae01a19ef03802008fea66213a
+      size: 185710481
+    - path: redbus/src/features/build_features.py
+      hash: md5
+      md5: db418dee9d43ab54e678a57bd50e270c
+      size: 10773
+    params:
+      redbus/params.yaml:
+        build_features.avg_func_list:
+        - - 30
+          - 25
+        - - 25
+          - 20
+        - - 20
+          - 14
+        build_features.lead_days:
+        - 30
+        - 20
+        - 15
+        build_features.target_enc_dest_reg_path: E:\DS\mlops_dvc_ds_project\redbus\data\encodding_files\destid_region_encode.csv
+        build_features.target_enc_destid_path: E:\DS\mlops_dvc_ds_project\redbus\data\encodding_files\destid_encode.csv
+        build_features.target_enc_srcid_path: E:\DS\mlops_dvc_ds_project\redbus\data\encodding_files\srcid_encode.csv
+        build_features.target_end_src_reg_path: E:\DS\mlops_dvc_ds_project\redbus\data\encodding_files\srcid_region_encode.csv
+    outs:
+    - path: redbus/data/processed/val_data_processed.csv
+      hash: md5
+      md5: 7140be65e53db4fa4ad8f7290cfa9213
+      size: 2680554
+  predict_model_val:
+    cmd: python redbus/src/models/predict_model.py redbus/data/processed/val_data_processed.csv
+      redbus/data/models/model.pkl redbus/data/processed/Model_Output_Val.csv val
+    deps:
+    - path: redbus/data/models/model.pkl
+      hash: md5
+      md5: 99866f509311c9aa72e8fdb65691e243
+      size: 2877812
+    - path: redbus/data/processed/val_data_processed.csv
+      hash: md5
+      md5: 7140be65e53db4fa4ad8f7290cfa9213
+      size: 2680554
+    outs:
+    - path: redbus/data/processed/Model_Output_Val.csv
+      hash: md5
+      md5: 1bdc43be5aa6ccd085464e6a81b2edf9
+      size: 72582
