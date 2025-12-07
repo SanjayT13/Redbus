@@ -81,7 +81,7 @@ stages:
         model_train.LGBMRegressor.lambda_l1: 1
         model_train.LGBMRegressor.lambda_l2: 1
         model_train.LGBMRegressor.learning_rate: 0.015
-        model_train.LGBMRegressor.max_depth: 6
+        model_train.LGBMRegressor.max_depth: 8
         model_train.LGBMRegressor.min_child_samples: 50
         model_train.LGBMRegressor.n_estimators: 600
         model_train.LGBMRegressor.random_state: 42
@@ -96,16 +96,16 @@ stages:
     outs:
     - path: redbus/data/models/model.pkl
       hash: md5
-      md5: 99866f509311c9aa72e8fdb65691e243
-      size: 2877812
+      md5: 050c0096a2cb92fa84269fcf04f3abda
+      size: 8812930
   predict_model:
     cmd: python redbus/src/models/predict_model.py redbus/data/processed/train_data_processed.csv
       redbus/data/models/model.pkl redbus/data/processed/Model_Output_train.csv train
     deps:
     - path: redbus/data/models/model.pkl
       hash: md5
-      md5: 99866f509311c9aa72e8fdb65691e243
-      size: 2877812
+      md5: 050c0096a2cb92fa84269fcf04f3abda
+      size: 8812930
     - path: redbus/data/processed/train_data_processed.csv
       hash: md5
       md5: 49a831e27fb450fc42071df0c71e0020
@@ -113,8 +113,8 @@ stages:
     outs:
     - path: redbus/data/processed/Model_Output_train.csv
       hash: md5
-      md5: ba62ed1b42d6508497163e271775550b
-      size: 652490
+      md5: 84b505e289f18140110ed7b24ad6d9a6
+      size: 652197
   build_features_val:
     cmd: python redbus/src/features/build_features.py redbus/data/interim/val.csv
       redbus/data/raw/transactions.csv redbus/data/processed/val_data_processed.csv
@@ -159,8 +159,8 @@ stages:
     deps:
     - path: redbus/data/models/model.pkl
       hash: md5
-      md5: 99866f509311c9aa72e8fdb65691e243
-      size: 2877812
+      md5: 050c0096a2cb92fa84269fcf04f3abda
+      size: 8812930
     - path: redbus/data/processed/val_data_processed.csv
       hash: md5
       md5: 7140be65e53db4fa4ad8f7290cfa9213
@@ -168,5 +168,5 @@ stages:
     outs:
     - path: redbus/data/processed/Model_Output_Val.csv
       hash: md5
-      md5: 1bdc43be5aa6ccd085464e6a81b2edf9
-      size: 72582
+      md5: be338af5a9f96a0849c29adc10d0fca4
+      size: 72494
