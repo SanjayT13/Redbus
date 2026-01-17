@@ -1,0 +1,6 @@
+outs:
+- md5: 1c445bb2e7bff3b8afee77569a49e5c0.dir
+  size: 2727
+  nfiles: 4
+  hash: md5
+  path: encodding_files
