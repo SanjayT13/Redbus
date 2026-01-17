@@ -17,7 +17,8 @@ stages:
     deps:
       - redbus/src/features/build_features.py 
       - redbus/data/interim/train.csv 
-      - redbus/data/raw/transactions.csv 
+      - redbus/data/raw/transactions.csv
+      - redbus/data/encodding_files
     params:
       - E:/DS/mlops_dvc_ds_project/redbus/params.yaml :
         - build_features.lead_days

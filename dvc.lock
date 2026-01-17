@@ -28,6 +28,11 @@ stages:
     cmd: python redbus/src/features/build_features.py redbus/data/interim/train.csv
       redbus/data/raw/transactions.csv redbus/data/processed/train_data_processed.csv
     deps:
+    - path: redbus/data/encodding_files
+      hash: md5
+      md5: 1c445bb2e7bff3b8afee77569a49e5c0.dir
+      size: 2727
+      nfiles: 4
     - path: redbus/data/interim/train.csv
       hash: md5
       md5: 93ef4e1cbb7c914f26df9dec506c4d51
