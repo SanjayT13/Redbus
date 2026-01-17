@@ -1,4 +1,6 @@
 [core]
-    remote = myremote
+    remote = s3remote
 ['remote "myremote"']
     url = E:/DS/dvc_remote-storage
+['remote "s3remote"']
+    url = s3://sanjay-redbus-dvc/dvcstore
