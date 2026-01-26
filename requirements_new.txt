@@ -71,7 +71,7 @@ MarkupSafe==3.0.3
 mdurl==0.1.2
 multidict==6.4.4
 narwhals==2.14.0
-networkx==3.5
+networkx==3.4.2
 numpy==2.2.6
 omegaconf==2.3.0
 orjson==3.10.18
